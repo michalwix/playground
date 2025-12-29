@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בונוס - משחק אותיות</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Start Modal -->
+    <div id="startModal" class="modal">
+        <div class="modal-content">
+            <h1>בונוס</h1>
+            <div class="modal-section">
+                <label>מצב משחק:</label>
+                <select id="gameMode">
+                    <option value="local">מקומי (מחשב אחד)</option>
+                    <option value="online">אונליין (2 שחקנים)</option>
+                </select>
+            </div>
+            
+            <!-- Local Game Options -->
+            <div id="localGameOptions">
+                <div class="modal-section">
+                    <label>מספר שחקנים:</label>
+                    <select id="playerMode">
+                        <option value="1">1 שחקן</option>
+                        <option value="2">2 שחקנים</option>
+                    </select>
+                </div>
+                <div class="modal-section">
+                    <label>שם שחקן 1:</label>
+                    <input type="text" id="player1Name" value="שחקן 1">
+                </div>
+                <div class="modal-section" id="player2Section" style="display: none;">
+                    <label>שם שחקן 2:</label>
+                    <input type="text" id="player2Name" value="שחקן 2" disabled>
+                </div>
+            </div>
+            
+            <!-- Online Game Options -->
+            <div id="onlineGameOptions" style="display: none;">
+                <div class="modal-section">
+                    <label>שם שחקן:</label>
+                    <input type="text" id="onlinePlayerName" value="שחקן" placeholder="הכנס שם">
+                </div>
+                <div class="modal-section">
+                    <button id="createRoomBtn" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">צור חדר חדש</button>
+                    <div style="text-align: center; margin: 15px 0; color: #666;">או</div>
+                    <label>הצטרף לחדר:</label>
+                    <input type="text" id="roomIdInput" placeholder="הכנס קוד חדר" style="text-transform: uppercase;">
+                    <button id="joinRoomBtn" class="btn btn-secondary" style="width: 100%; margin-top: 10px;">הצטרף</button>
+                </div>
+                <div id="roomInfo" style="display: none; margin-top: 15px; padding: 10px; background: #f0f0f0; border-radius: 8px;">
+                    <p><strong>קוד חדר:</strong> <span id="roomCode" style="font-size: 24px; font-weight: bold; color: #667eea; letter-spacing: 2px;"></span>
+                    <button id="copyRoomCodeBtn" class="btn btn-secondary" style="margin-right: 10px; padding: 5px 10px; font-size: 12px;">העתק</button></p>
+                    <p id="roomStatus">ממתין לשחקן שני...</p>
+                    <div id="roomPlayers"></div>
+                    <div id="connectionStatus" style="margin-top: 10px; font-size: 12px; color: #666;">
+                        <span id="connectionIndicator">🟢 מחובר</span>
+                    </div>
+                    <button id="startOnlineGameBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px; display: none;">אני מוכן</button>
+                </div>
+            </div>
+            
+            <button id="startGameBtn" class="btn btn-primary" style="display: none;">התחל משחק</button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Dispute Modal -->
+    <div id="disputeModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>ערעור על מילה</h2>
+            <p>המילה "<strong id="disputedWord"></strong>" לא נמצאה במילון.</p>
+            <div id="disputePlayerSection" style="display: none;">
+                <p><strong id="disputeAskerName"></strong> שואל: האם המילה תקנית?</p>
+            </div>
+            <div class="dispute-note">
+                <p>💡 ניתן לבדוק את המילה במילון או להתייעץ עם השחקן השני</p>
+            </div>
+            <div class="modal-actions">
+                <button id="disputeAcceptBtn" class="btn btn-primary">כן, המילה תקנית</button>
+                <button id="disputeRejectBtn" class="btn btn-secondary">לא, המילה לא תקנית</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Challenge Modal -->
+    <div id="challengeModal" class="modal" style="display: none;">
+        <div class="modal-content challenge-modal">
+            <h2 id="challengeTitle">⭐ אתגר כוכב ⭐</h2>
+            <div id="challengeContent">
+                <p id="challengeQuestion"></p>
+                <div id="challengeInputArea">
+                    <input type="text" id="challengeAnswer" placeholder="הכנס תשובה..." dir="rtl">
+                </div>
+                <div id="challengeHint" style="display: none; margin-top: 10px; font-size: 14px; color: #666;"></div>
+            </div>
+            <div class="modal-actions">
+                <button id="challengeSubmitBtn" class="btn btn-primary">שלח תשובה</button>
+                <button id="challengeSkipBtn" class="btn btn-secondary">דלג</button>
+            </div>
+            <div id="challengeResult" style="display: none; margin-top: 15px; padding: 10px; border-radius: 8px;"></div>
+        </div>
+    </div>
+
+    <!-- Main Game Container -->
+    <div id="gameContainer" class="game-container" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">בונוס</h1>
+            <div class="scores">
+                <div class="score-item" id="player1Score">
+                    <span class="player-name">שחקן 1</span>
+                    <span class="score-value">0</span>
+                </div>
+                <div class="score-item active" id="player2Score">
+                    <span class="player-name">שחקן 2</span>
+                    <span class="score-value">0</span>
+                </div>
+            </div>
+            <div class="current-player-indicator">
+                <span id="currentPlayerName">שחקן 1</span> - <span id="turnStatus">תורך</span>
+                <div id="movePreview" style="display: none; margin-top: 5px; font-size: 14px; color: #667eea;">
+                    <span id="previewScore">ניקוד משוער: 0</span>
+                </div>
+            </div>
+            <div class="timer-toggle">
+                <label>
+                    <input type="checkbox" id="timerToggle">
+                    טיימר תור
+                </label>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Board -->
+            <div class="board-container">
+                <div id="board" class="board"></div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="card">
+                    <h3>בונוסים בלוח</h3>
+                    <div class="legend-list">
+                        <div class="legend-item">
+                            <span class="legend-color dl-color"></span>
+                            <span class="legend-text"><strong>DL</strong> - כפל אות (x2)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color tl-color"></span>
+                            <span class="legend-text"><strong>TL</strong> - משולש אות (x3)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color dw-color"></span>
+                            <span class="legend-text"><strong>DW</strong> - כפל מילה (x2)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color tw-color"></span>
+                            <span class="legend-text"><strong>TW</strong> - משולש מילה (x3)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color star-color">⭐</span>
+                            <span class="legend-text"><strong>כוכב</strong> - +20 נקודות</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>משימות אקסטרה</h3>
+                    <div id="missions" class="missions-list">
+                        <div class="mission-item" data-mission="LONG_WORD">
+                            <input type="checkbox" id="mission-long" disabled>
+                            <label for="mission-long">מילה ארוכה (6+ אותיות) - +15</label>
+                        </div>
+                        <div class="mission-item" data-mission="USE_DW_TW">
+                            <input type="checkbox" id="mission-bonus" disabled>
+                            <label for="mission-bonus">שימוש ב-DW/TW - +10</label>
+                        </div>
+                        <div class="mission-item" data-mission="COMBO_2PLUS">
+                            <input type="checkbox" id="mission-combo" disabled>
+                            <label for="mission-combo">קומבו (2+ מילים) - +10</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>צ'ופרים</h3>
+                    <div id="rewards" class="rewards-list">
+                        <div class="reward-item">אין צ'ופרים פעילים</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rack and Controls -->
+        <div class="bottom-section">
+            <div class="rack-container">
+                <div id="rack" class="rack"></div>
+            </div>
+            <div class="controls">
+                <button id="submitBtn" class="btn btn-primary">אשר מהלך</button>
+                <button id="resetBtn" class="btn btn-secondary">אפס תור</button>
+                <button id="exchangeBtn" class="btn btn-secondary">החלף אותיות</button>
+                <button id="shuffleBtn" class="btn btn-secondary">ערבב</button>
+            </div>
+            <div id="gameEndModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>🎉 המשחק הסתיים!</h2>
+                    <div id="winnerInfo"></div>
+                    <div class="modal-actions">
+                        <button id="newGameBtn" class="btn btn-primary">משחק חדש</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="dictionary.js"></script>
+    <script src="app.js"></script>
+    <script src="online.js"></script>
+</body>
+</html>
+
