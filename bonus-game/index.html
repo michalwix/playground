@@ -22,6 +22,15 @@
             <!-- Local Game Options -->
             <div id="localGameOptions">
                 <div class="modal-section">
+                    <label>מצב קושי:</label>
+                    <select id="difficultyMode">
+                        <option value="easy">קל (ללא טיימר, עם רמזים)</option>
+                        <option value="normal" selected>רגיל (ללא טיימר)</option>
+                        <option value="hard">קשה (45 שניות לתור)</option>
+                        <option value="expert">מומחה (דקה לתור, פחות אריחים)</option>
+                    </select>
+                </div>
+                <div class="modal-section">
                     <label>מספר שחקנים:</label>
                     <select id="playerMode">
                         <option value="1">1 שחקן</option>
@@ -63,7 +72,7 @@
                 </div>
             </div>
             
-            <button id="startGameBtn" class="btn btn-primary" style="display: none;">התחל משחק</button>
+            <button id="startGameBtn" class="btn btn-primary">התחל משחק</button>
         </div>
     </div>
 
@@ -124,15 +133,14 @@
             </div>
             <div class="current-player-indicator">
                 <span id="currentPlayerName">שחקן 1</span> - <span id="turnStatus">תורך</span>
+                <span id="timerDisplay" style="display: none; margin-right: 15px; font-weight: bold; color: #667eea;"></span>
                 <div id="movePreview" style="display: none; margin-top: 5px; font-size: 14px; color: #667eea;">
                     <span id="previewScore">ניקוד משוער: 0</span>
                 </div>
             </div>
-            <div class="timer-toggle">
-                <label>
-                    <input type="checkbox" id="timerToggle">
-                    טיימר תור
-                </label>
+            <div class="header-buttons">
+                <button id="highScoresBtn" class="btn btn-secondary" style="padding: 5px 15px; margin-left: 10px;">🏆 שיאים</button>
+                <button id="hintsBtn" class="btn btn-secondary" style="padding: 5px 15px;">💡 רמזים</button>
             </div>
         </header>
 
@@ -222,6 +230,7 @@
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script src="dictionary.js"></script>
     <script src="app.js"></script>
+    <script src="features.js"></script>
     <script src="online.js"></script>
 </body>
 </html>

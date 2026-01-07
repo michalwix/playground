@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Up Research - Q3 2025</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #116DFF;
+            --primary-light: #2B85FF;
+            --primary-dark: #0052CC;
+            --accent: #116DFF;
+            --accent-light: #E8F1FF;
+            --success: #00A86B;
+            --warning: #FDB022;
+            --danger: #F04438;
+            --text: #20303C;
+            --text-light: #3B5166;
+            --text-muted: #7A92A5;
+            --bg: #ffffff;
+            --bg-alt: #F7F8FA;
+            --bg-sidebar: #0D1A26;
+            --border: #DFE5EB;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            color: rgba(255,255,255,0.7);
+            padding: 24px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 16px;
+        }
+        
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .toc { list-style: none; }
+        
+        .toc-item {
+            border-left: 3px solid transparent;
+        }
+        
+        .toc-item.active {
+            border-left-color: var(--primary);
+            background: rgba(17, 109, 255, 0.15);
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 10px 24px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .toc-link:hover, .toc-item.active .toc-link { color: #fff; }
+        .toc-link.h3 { padding-left: 40px; font-size: 12px; font-weight: 400; }
+        
+        /* Main Content */
+        .main { flex: 1; margin-left: 280px; padding: 0; }
+        
+        .header {
+            background: #fff;
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            background: #fff;
+            color: var(--text);
+        }
+        
+        .btn:hover { background: var(--bg-alt); }
+        .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .btn-primary:hover { background: var(--primary-dark); }
+        
+        .content { max-width: 960px; padding: 48px 48px 80px; }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5 {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+        
+        h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 64px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        h3 { font-size: 22px; font-weight: 600; margin-top: 48px; margin-bottom: 12px; }
+        h4 { font-size: 17px; font-weight: 600; margin-top: 32px; margin-bottom: 12px; }
+        h5 { font-size: 15px; font-weight: 600; margin-top: 24px; margin-bottom: 8px; }
+        
+        p { margin-bottom: 16px; font-size: 15px; line-height: 1.7; color: var(--text-light); }
+        
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 24px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        
+        th {
+            background: var(--bg-alt);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        
+        th:hover { background: var(--border); }
+        th::after { content: '↕'; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); opacity: 0.4; font-size: 10px; }
+        th.sort-asc::after { content: '↑'; opacity: 1; color: var(--primary); }
+        th.sort-desc::after { content: '↓'; opacity: 1; color: var(--primary); }
+        
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text-light); }
+        tr:hover { background: var(--bg-alt); }
+        
+        /* Charts */
+        .chart-container {
+            background: var(--bg-alt);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            border: 1px solid var(--border);
+        }
+        
+        .chart-title { font-size: 13px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+        
+        /* Code blocks */
+        pre {
+            background: var(--bg-sidebar);
+            color: rgba(255,255,255,0.85);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 24px 0;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            background: var(--bg-alt);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        pre code { background: none; padding: 0; }
+        
+        /* SQL Code Block */
+        .sql-block {
+            position: relative;
+            margin: 24px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-sidebar);
+        }
+        
+        .sql-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sql-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .copy-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 6px;
+            color: rgba(255,255,255,0.8);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn:hover { background: rgba(255,255,255,0.2); }
+        .copy-btn.copied { background: var(--primary); color: #fff; }
+        
+        .sql-code {
+            padding: 20px;
+            margin: 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cccccc;
+            background: #1a1a1a;
+        }
+        
+        .sql-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+            width: 100%;
+            text-align: left;
+            margin-top: 16px;
+        }
+        
+        .sql-toggle:hover { background: var(--border); }
+        .sql-toggle svg { transition: transform 0.2s; }
+        .sql-toggle.open svg { transform: rotate(90deg); }
+        .sql-content { display: none; margin-top: 8px; }
+        .sql-content.open { display: block; }
+        
+        /* Blockquotes */
+        blockquote {
+            border-left: 3px solid var(--primary);
+            padding: 16px 20px;
+            background: var(--accent-light);
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        
+        blockquote p:last-child { margin-bottom: 0; }
+        
+        /* Lists */
+        ol, ul { margin: 24px 0; padding-left: 28px; }
+        li { margin-bottom: 12px; line-height: 1.7; }
+        
+        /* Section Description */
+        .section-desc {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0 0 24px 0;
+            max-width: 800px;
+        }
+        
+        hr { border: none; border-top: 1px solid var(--border); margin: 64px 0; }
+        
+        /* Anchor scroll offset for sticky header */
+        section[id] {
+            scroll-margin-top: 80px;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        
+        .sidebar-close {
+            display: none;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #888;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 90;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .sidebar-overlay.active { display: block; opacity: 1; }
+        
+        /* Print Styles */
+        @media print {
+            .sidebar, .no-print { display: none !important; }
+            .main { margin-left: 0; }
+            .content { padding: 24px 0; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-close { display: block; }
+            .main { margin-left: 0; }
+            .mobile-menu-toggle { display: block; }
+            .header-content { justify-content: space-between; }
+        }
+        
+        @media (max-width: 768px) {
+            .content { padding: 24px 16px 60px; }
+            h2 { font-size: 24px; margin-top: 40px; }
+            h3 { font-size: 18px; margin-top: 32px; }
+            table { font-size: 12px; }
+            th, td { padding: 10px 12px; }
+        }
+        
+        @media (max-width: 480px) {
+            .content { padding: 16px 12px 60px; }
+            h2 { font-size: 20px; }
+            h3 { font-size: 16px; }
+            .btn { padding: 8px 12px; font-size: 12px; }
+            table { font-size: 11px; }
+            th, td { padding: 6px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <button class="sidebar-close" id="sidebarClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="sidebar-header">
+                <div class="sidebar-title">Switch Up Research</div>
+                <div class="sidebar-subtitle">Q3 2025 Analysis</div>
+            </div>
+            <ul class="toc" id="toc"></ul>
+        </nav>
+        
+        <!-- Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                    </button>
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>
+                        PDF
+                    </button>
+                </div>
+            </header>
+            
+            <div class="content">
+                <!-- Switch Up Analysis -->
+                <section id="executive-summary">
+                    <h2>Switch Up Analysis</h2>
+                    <p class="section-desc">Overview of all premium activity in Q3 2025, showing the balance between initial purchases and switch ups.</p>
+                    
+                    <h4>Premium Activity Baseline (Q3 2025)</h4>
+                    <blockquote><strong>Data Source:</strong> <code>prod.premium.subscriptions_premium_plan_scd</code></blockquote>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Activity Type</th><th>Sites</th><th>% of Total</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Initial Purchase</strong></td><td><strong>507,595</strong></td><td><strong>84.2%</strong></td><td>New premium purchases (free → paid)</td></tr>
+                                <tr><td><strong>Switch Up</strong></td><td><strong>95,166</strong></td><td><strong>15.8%</strong></td><td>Unique sites with plan upgrades</td></tr>
+                                <tr style="background: var(--bg-alt); font-weight: 600;"><td><strong>Total</strong></td><td><strong>602,761</strong></td><td><strong>100%</strong></td><td>All premium events in Q3 2025</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <blockquote><strong>Note:</strong> 95,166 unique sites performed 98,196 total switch up events (some sites did multiple switch ups in Q3).</blockquote>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Query
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Query</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">SELECT 
+  start_action,
+  COUNT(DISTINCT CONCAT(uuid, '-', msid)) as sites
+  FROM prod.premium.subscriptions_premium_plan_scd
+  WHERE start_action IN ('initial purchase', 'switch up')
+    AND is_uuid_wix_user = false
+  AND start_date >= DATE '2025-07-01' AND start_date < DATE '2025-10-01'
+GROUP BY start_action
+ORDER BY sites DESC</pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Switch Up Distribution -->
+                <section id="distribution">
+                    <h3>Switch Up Distribution by Level</h3>
+                    <p class="section-desc">Breakdown of switch up events by their sequence number, showing how many users progress through multiple upgrades.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Switch Up Events by Level</div>
+                        <canvas id="distributionChart" height="200"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Switch Up #</th><th>Events</th><th>% of All</th><th>Cumulative %</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>1st</strong></td><td><strong>72,363 (73.7%)</strong></td><td><strong>73.7%</strong></td><td>73.7%</td></tr>
+                                <tr><td><strong>2nd</strong></td><td><strong>19,733 (20.1%)</strong></td><td><strong>20.1%</strong></td><td>93.8%</td></tr>
+                                <tr><td><strong>3rd</strong></td><td><strong>4,226 (4.3%)</strong></td><td><strong>4.3%</strong></td><td>98.1%</td></tr>
+                                <tr><td><strong>4th</strong></td><td><strong>1,214 (1.2%)</strong></td><td><strong>1.2%</strong></td><td>99.4%</td></tr>
+                                <tr><td><strong>5th</strong></td><td><strong>369 (0.4%)</strong></td><td><strong>0.4%</strong></td><td>99.7%</td></tr>
+                                <tr><td><strong>6th</strong></td><td><strong>149 (0.2%)</strong></td><td><strong>0.2%</strong></td><td>99.9%</td></tr>
+                                <tr><td><strong>7th</strong></td><td><strong>76 (0.1%)</strong></td><td><strong>0.1%</strong></td><td>~100%</td></tr>
+                                <tr><td><strong>8th</strong></td><td><strong>27 (&lt;0.1%)</strong></td><td><strong>&lt;0.1%</strong></td><td>~100%</td></tr>
+                                <tr><td><strong>9th</strong></td><td><strong>15 (&lt;0.1%)</strong></td><td><strong>&lt;0.1%</strong></td><td>~100%</td></tr>
+                                <tr><td><strong>10th+</strong></td><td><strong>24 (&lt;0.1%)</strong></td><td><strong>&lt;0.1%</strong></td><td>100%</td></tr>
+                                <tr style="background: var(--bg-alt); font-weight: 600;"><td><strong>Total</strong></td><td><strong>98,196 (100%)</strong></td><td><strong>100%</strong></td><td>-</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Query
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Query - Distribution</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">WITH all_events AS (
+  SELECT uuid, msid, start_action, start_date
+  FROM prod.premium.subscriptions_premium_plan_scd
+  WHERE start_action IN ('initial purchase', 'switch up')
+    AND is_uuid_wix_user = false
+),
+switch_ups_numbered AS (
+  SELECT uuid, msid, start_date,
+    ROW_NUMBER() OVER (PARTITION BY uuid, msid ORDER BY start_date) as switch_up_num
+  FROM all_events
+  WHERE start_action = 'switch up'
+),
+q3_2025 AS (
+  SELECT * FROM switch_ups_numbered
+  WHERE start_date >= DATE '2025-07-01' AND start_date < DATE '2025-10-01'
+)
+SELECT 
+  switch_up_num,
+  COUNT(DISTINCT CONCAT(uuid, '-', msid)) as sites,
+  ROUND(100.0 * COUNT(DISTINCT CONCAT(uuid, '-', msid)) / 
+    SUM(COUNT(DISTINCT CONCAT(uuid, '-', msid))) OVER (), 2) as pct_of_all
+FROM q3_2025
+GROUP BY switch_up_num
+ORDER BY switch_up_num</pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Device Breakdown -->
+                <section id="device">
+                    <h3>Device Breakdown</h3>
+                    <p class="section-desc">Distribution of switch ups by device type, based on Package Picker session data.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Switch Ups by Device</div>
+                        <canvas id="deviceChart" height="150"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Device</th><th>Sites</th><th>% of Total</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Computer</strong></td><td><strong>72,383 (75.6%)</strong></td><td><strong>75.6%</strong></td></tr>
+                                <tr><td><strong>Unknown</strong></td><td><strong>18,104 (18.9%)</strong></td><td><strong>18.9%</strong></td></tr>
+                                <tr><td><strong>Mobile</strong></td><td><strong>5,131 (5.4%)</strong></td><td><strong>5.4%</strong></td></tr>
+                                <tr><td>Tablet</td><td>80 (0.1%)</td><td>0.1%</td></tr>
+                                <tr style="background: var(--bg-alt); font-weight: 600;"><td><strong>Total</strong></td><td><strong>95,698 (100%)</strong></td><td><strong>100%</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <blockquote><strong>"Unknown" = switch ups without Package Picker session data</strong> (e.g., via customer support, direct API, Change Cycle flow, or tracking gaps).</blockquote>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Query
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Query - Device</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">WITH all_events AS (
+  SELECT subscription_id, uuid, msid, start_date,
+    ROW_NUMBER() OVER (PARTITION BY uuid, msid ORDER BY start_date) as rn
+  FROM prod.premium.subscriptions_premium_plan_scd
+  WHERE start_action = 'switch up'
+    AND is_uuid_wix_user = false
+    AND start_date >= DATE '2025-07-01' AND start_date < DATE '2025-10-01'
+),
+first_switch_up AS (
+  SELECT subscription_id, uuid, msid, start_date
+  FROM all_events
+  WHERE rn = 1
+),
+site_device AS (
+  SELECT 
+    e.uuid, 
+    e.msid,
+    COALESCE(min_by(pp.device_type, pp.first_pp_view_date), 'Unknown') as device
+  FROM first_switch_up e
+  LEFT JOIN prod.premium.package_picker_sessions_log pp 
+    ON e.subscription_id = pp.purchased_subscription_id
+    AND DATE(pp.first_pp_view_date) = DATE(e.start_date)
+  GROUP BY e.uuid, e.msid
+)
+SELECT
+  device,
+  COUNT(*) as sites,
+  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1) as pct
+FROM site_device
+GROUP BY device
+ORDER BY sites DESC</pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Conversion Funnel -->
+                <section id="funnel">
+                    <h3>Conversion Funnel</h3>
+                    <p class="section-desc">Progressive retention through each switch up level, showing how users advance through multiple upgrades.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Upgrade Progression Funnel</div>
+                        <canvas id="funnelChart" height="200"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Stage</th><th>Count</th><th>Retention Rate</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>All Initial Purchases</td><td>507,595</td><td>-</td></tr>
+                                <tr><td>First-ever Initial Purchase</td><td>408,633</td><td>80.5% (of all initial)</td></tr>
+                                <tr><td>1st Switch Up</td><td>72,363</td><td>17.7% (of first-ever)</td></tr>
+                                <tr><td>2nd Switch Up</td><td>19,733</td><td>27.3% (of 1st)</td></tr>
+                                <tr><td>3rd Switch Up</td><td>4,226</td><td>21.4% (of 2nd)</td></tr>
+                                <tr><td>4th Switch Up</td><td>1,214</td><td>28.7% (of 3rd)</td></tr>
+                                <tr><td>5th+ Switch Up</td><td>660</td><td>54.4% (of 4th)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Patterns -->
+                <section id="patterns">
+                    <h3>Key Pattern: Cycle Ladder Climbing</h3>
+                    <p class="section-desc">The dominant upgrade pattern is cycle extension - users staying on the same plan but extending their billing commitment.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Upgrade Pattern Distribution</div>
+                        <canvas id="patternChart" height="100"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Category</th><th>Cycle Extension</th><th>Tier Jump</th><th>Total</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>All Switch Ups</strong></td><td><strong>~55% (~54,000)</strong></td><td>~45% (~44,200)</td><td>98,196</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h4>Top Cycle Extension Patterns</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Pattern</th><th>Volume</th><th>% of All</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Core Yearly → Core 2-year</td><td>11,950</td><td>12.2%</td></tr>
+                                <tr><td>Core 2-year → Core 3-year</td><td>7,987</td><td>8.1%</td></tr>
+                                <tr><td>Business Yearly → Business 2-year</td><td>2,950</td><td>3.0%</td></tr>
+                                <tr><td>Core Yearly → Core 3-year</td><td>2,784</td><td>2.8%</td></tr>
+                                <tr><td>Core Monthly → Core Yearly</td><td>2,210</td><td>2.3%</td></tr>
+                                <tr><td>Business 2-year → Business 3-year</td><td>2,086</td><td>2.1%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h4>Top Tier Jump Patterns</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Pattern</th><th>Volume</th><th>% of All</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Light → Core</td><td>23,150</td><td>23.6%</td></tr>
+                                <tr><td>Core → Business</td><td>8,430</td><td>8.6%</td></tr>
+                                <tr><td>Light → Business</td><td>4,714</td><td>4.8%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Timing -->
+                <section id="timing">
+                    <h3>Median Time Breakdown</h3>
+                    <p class="section-desc">How long it takes users to progress through each switch up level, from initial purchase to subsequent upgrades.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Median Time to Switch Up (Days)</div>
+                        <canvas id="timingChart" height="200"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Switch Up Level</th><th>Median Time (days)</th><th>Median Time (approx)</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1st Switch Up</td><td><strong>584</strong></td><td>~19 months</td></tr>
+                                <tr><td>2nd Switch Up</td><td><strong>1,157</strong></td><td>~3.2 years</td></tr>
+                                <tr><td>3rd Switch Up</td><td><strong>1,921</strong></td><td>~5.3 years</td></tr>
+                                <tr><td>4th Switch Up</td><td><strong>2,312</strong></td><td>~6.3 years</td></tr>
+                                <tr><td>5th Switch Up</td><td><strong>2,587</strong></td><td>~7.1 years</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Detailed Breakdown -->
+                <section id="detailed-breakdown">
+                    <h3>Detailed Breakdown: All Switch Ups</h3>
+                    <p class="section-desc">Complete breakdown of switch up destinations by source plan and cycle. Each section shows where users go when they upgrade from a specific plan.</p>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Query
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Query - Detailed Breakdown</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">SELECT 
+  previous_product_name as from_plan,
+  previous_cycle_name as from_cycle,
+  product_name as to_plan,
+  cycle_name as to_cycle,
+  COUNT(*) as total
+FROM prod.premium.subscriptions_premium_plan_scd
+WHERE start_action = 'switch up'
+  AND is_uuid_wix_user = false
+  AND start_date >= DATE '2025-07-01' 
+  AND start_date < DATE '2025-10-01'
+  AND previous_product_name = 'Core' -- Change for each plan
+GROUP BY previous_product_name, previous_cycle_name, product_name, cycle_name
+ORDER BY total DESC</pre>
+                        </div>
+                    </div>
+                    
+                    <h4>CORE PLANS (37,525 Total Switch Ups)</h4>
+                    
+                    <h5>Core Yearly (20,929 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core 2-year</td><td>11,950</td><td><strong>57%</strong></td></tr>
+                                <tr><td>Core 3-year</td><td>2,784</td><td>13%</td></tr>
+                                <tr><td>Business Yearly</td><td>2,698</td><td>13%</td></tr>
+                                <tr><td>Standard (Studio) Yearly</td><td>1,487</td><td>7%</td></tr>
+                                <tr><td>Business 2-year</td><td>992</td><td>5%</td></tr>
+                                <tr><td>Business 3-year</td><td>377</td><td>2%</td></tr>
+                                <tr><td>Other</td><td>641</td><td>3%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Core 2-year (10,242 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core 3-year</td><td>7,987</td><td><strong>78%</strong></td></tr>
+                                <tr><td>Business 2-year</td><td>1,031</td><td>10%</td></tr>
+                                <tr><td>Business 3-year</td><td>456</td><td>4%</td></tr>
+                                <tr><td>Standard (Studio) 2-year</td><td>424</td><td>4%</td></tr>
+                                <tr><td>Core Monthly</td><td>117</td><td>1%</td></tr>
+                                <tr><td>Other</td><td>227</td><td>2%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Core Monthly (5,159 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core Yearly</td><td>2,210</td><td><strong>43%</strong></td></tr>
+                                <tr><td>Business Monthly</td><td>1,243</td><td>24%</td></tr>
+                                <tr><td>Business Yearly</td><td>532</td><td>10%</td></tr>
+                                <tr><td>Standard (Studio) Monthly</td><td>398</td><td>8%</td></tr>
+                                <tr><td>Core 2-year</td><td>276</td><td>5%</td></tr>
+                                <tr><td>Core 3-year</td><td>154</td><td>3%</td></tr>
+                                <tr><td>Plus (Studio) Monthly</td><td>123</td><td>2%</td></tr>
+                                <tr><td>Other</td><td>223</td><td>4%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Core 3-year (1,195 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Business 3-year</td><td>998</td><td><strong>84%</strong></td></tr>
+                                <tr><td>Standard (Studio) 3-year</td><td>163</td><td>14%</td></tr>
+                                <tr><td>Plus (Studio) 3-year</td><td>24</td><td>2%</td></tr>
+                                <tr><td>Other</td><td>10</td><td>1%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>LIGHT PLANS (35,077 Total Switch Ups)</h4>
+                    
+                    <h5>Light Yearly (16,863 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core Yearly</td><td>8,274</td><td><strong>49%</strong></td></tr>
+                                <tr><td>Light 2-year</td><td>1,958</td><td>12%</td></tr>
+                                <tr><td>Core 2-year</td><td>1,832</td><td>11%</td></tr>
+                                <tr><td>Business Yearly</td><td>1,478</td><td>9%</td></tr>
+                                <tr><td>Basic (Studio) Yearly</td><td>1,088</td><td>6%</td></tr>
+                                <tr><td>Core 3-year</td><td>1,009</td><td>6%</td></tr>
+                                <tr><td>Light 3-year</td><td>400</td><td>2%</td></tr>
+                                <tr><td>Other</td><td>824</td><td>5%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Light Monthly (13,562 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core Monthly</td><td>6,204</td><td><strong>46%</strong></td></tr>
+                                <tr><td>Core Yearly</td><td>2,092</td><td>15%</td></tr>
+                                <tr><td>Business Monthly</td><td>1,638</td><td>12%</td></tr>
+                                <tr><td>Light Yearly</td><td>1,448</td><td>11%</td></tr>
+                                <tr><td>Basic (Studio) Monthly</td><td>676</td><td>5%</td></tr>
+                                <tr><td>Business Yearly</td><td>508</td><td>4%</td></tr>
+                                <tr><td>Core 2-year</td><td>262</td><td>2%</td></tr>
+                                <tr><td>Other</td><td>734</td><td>5%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Light 2-year (3,631 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core 2-year</td><td>1,690</td><td><strong>47%</strong></td></tr>
+                                <tr><td>Core 3-year</td><td>826</td><td>23%</td></tr>
+                                <tr><td>Light 3-year</td><td>484</td><td>13%</td></tr>
+                                <tr><td>Business 2-year</td><td>232</td><td>6%</td></tr>
+                                <tr><td>Basic (Studio) 2-year</td><td>209</td><td>6%</td></tr>
+                                <tr><td>Business 3-year</td><td>94</td><td>3%</td></tr>
+                                <tr><td>Other</td><td>96</td><td>3%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Light 3-year (1,021 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core 3-year</td><td>804</td><td><strong>79%</strong></td></tr>
+                                <tr><td>Business 3-year</td><td>118</td><td>12%</td></tr>
+                                <tr><td>Basic (Studio) 3-year</td><td>88</td><td>9%</td></tr>
+                                <tr><td>Other</td><td>11</td><td>1%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>BUSINESS PLANS (9,360 Total Switch Ups)</h4>
+                    
+                    <h5>Business Yearly (4,641 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Business 2-year</td><td>2,950</td><td><strong>64%</strong></td></tr>
+                                <tr><td>Plus (Studio) Yearly</td><td>779</td><td>17%</td></tr>
+                                <tr><td>Business 3-year</td><td>468</td><td>10%</td></tr>
+                                <tr><td>Business Monthly</td><td>216</td><td>5%</td></tr>
+                                <tr><td>Business Elite Yearly</td><td>110</td><td>2%</td></tr>
+                                <tr><td>Other</td><td>118</td><td>3%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Business 2-year (2,616 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Business 3-year</td><td>2,086</td><td><strong>80%</strong></td></tr>
+                                <tr><td>Plus (Studio) 2-year</td><td>243</td><td>9%</td></tr>
+                                <tr><td>Business Monthly</td><td>135</td><td>5%</td></tr>
+                                <tr><td>Business Elite 2-year</td><td>51</td><td>2%</td></tr>
+                                <tr><td>Business Yearly</td><td>49</td><td>2%</td></tr>
+                                <tr><td>Other</td><td>52</td><td>2%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Business Monthly (1,951 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Business Yearly</td><td>1,251</td><td><strong>64%</strong></td></tr>
+                                <tr><td>Plus (Studio) Monthly</td><td>283</td><td>15%</td></tr>
+                                <tr><td>Business 2-year</td><td>181</td><td>9%</td></tr>
+                                <tr><td>Business Elite Monthly</td><td>115</td><td>6%</td></tr>
+                                <tr><td>Business 3-year</td><td>79</td><td>4%</td></tr>
+                                <tr><td>Other</td><td>42</td><td>2%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Business 3-year (152 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Plus (Studio) 3-year</td><td>114</td><td><strong>75%</strong></td></tr>
+                                <tr><td>Business Elite 3-year</td><td>38</td><td>25%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>UNLIMITED - LEGACY (5,464 Total Switch Ups)</h4>
+                    
+                    <h5>Unlimited Yearly (2,416 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Unlimited Monthly</td><td>1,882</td><td><strong>78%</strong></td></tr>
+                                <tr><td>Core Yearly</td><td>155</td><td>6%</td></tr>
+                                <tr><td>Basic (Studio) Yearly</td><td>67</td><td>3%</td></tr>
+                                <tr><td>Business Yearly</td><td>53</td><td>2%</td></tr>
+                                <tr><td>Core 2-year</td><td>50</td><td>2%</td></tr>
+                                <tr><td>Other</td><td>209</td><td>9%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Unlimited Monthly (1,856 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Unlimited Yearly</td><td>1,736</td><td><strong>94%</strong></td></tr>
+                                <tr><td>Core Monthly</td><td>33</td><td>2%</td></tr>
+                                <tr><td>Light Monthly</td><td>22</td><td>1%</td></tr>
+                                <tr><td>Core Yearly</td><td>20</td><td>1%</td></tr>
+                                <tr><td>Other</td><td>45</td><td>2%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Unlimited 2-year (894 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core 2-year</td><td>381</td><td><strong>43%</strong></td></tr>
+                                <tr><td>Core 3-year</td><td>284</td><td>32%</td></tr>
+                                <tr><td>Business 2-year</td><td>69</td><td>8%</td></tr>
+                                <tr><td>Basic (Studio) 2-year</td><td>60</td><td>7%</td></tr>
+                                <tr><td>Business 3-year</td><td>33</td><td>4%</td></tr>
+                                <tr><td>Other</td><td>67</td><td>7%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Unlimited 3-year (298 switch ups)</h5>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core 3-year</td><td>219</td><td><strong>74%</strong></td></tr>
+                                <tr><td>Business 3-year</td><td>43</td><td>14%</td></tr>
+                                <tr><td>Basic (Studio) 3-year</td><td>25</td><td>8%</td></tr>
+                                <tr><td>Unlimited 3-year</td><td>10</td><td>3%</td></tr>
+                                <tr><td>Other</td><td>1</td><td>0%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>WIX STUDIO PLANS (4,055 Total Switch Ups)</h4>
+                    
+                    <h5>Basic (Studio) - 3,311 Total</h5>
+                    
+                    <p><strong>Basic (Studio) Monthly (1,907 switch ups)</strong></p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Standard (Studio) Monthly</td><td>1,070</td><td><strong>56%</strong></td></tr>
+                                <tr><td>Basic (Studio) Yearly</td><td>359</td><td>19%</td></tr>
+                                <tr><td>Plus (Studio) Monthly</td><td>278</td><td>15%</td></tr>
+                                <tr><td>Standard (Studio) Yearly</td><td>69</td><td>4%</td></tr>
+                                <tr><td>Plus (Studio) Yearly</td><td>36</td><td>2%</td></tr>
+                                <tr><td>Other</td><td>95</td><td>5%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p><strong>Basic (Studio) Yearly (1,149 switch ups)</strong></p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Standard (Studio) Yearly</td><td>801</td><td><strong>70%</strong></td></tr>
+                                <tr><td>Plus (Studio) Yearly</td><td>159</td><td>14%</td></tr>
+                                <tr><td>Basic (Studio) 2-year</td><td>80</td><td>7%</td></tr>
+                                <tr><td>Standard (Studio) 2-year</td><td>31</td><td>3%</td></tr>
+                                <tr><td>Basic (Studio) 3-year</td><td>29</td><td>3%</td></tr>
+                                <tr><td>Other</td><td>49</td><td>4%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p><strong>Basic (Studio) 2-year (193 switch ups)</strong></p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Standard (Studio) 2-year</td><td>121</td><td><strong>63%</strong></td></tr>
+                                <tr><td>Basic (Studio) 3-year</td><td>32</td><td>17%</td></tr>
+                                <tr><td>Plus (Studio) 2-year</td><td>16</td><td>8%</td></tr>
+                                <tr><td>Standard (Studio) 3-year</td><td>14</td><td>7%</td></tr>
+                                <tr><td>Other</td><td>10</td><td>5%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p><strong>Basic (Studio) 3-year (62 switch ups)</strong></p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Standard (Studio) 3-year</td><td>48</td><td><strong>77%</strong></td></tr>
+                                <tr><td>Plus (Studio) 3-year</td><td>14</td><td>23%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h5>Standard (Studio) - 744 Total</h5>
+                    
+                    <p><strong>Standard (Studio) Monthly (441 switch ups)</strong></p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Plus (Studio) Monthly</td><td>267</td><td><strong>61%</strong></td></tr>
+                                <tr><td>Standard (Studio) Yearly</td><td>116</td><td>26%</td></tr>
+                                <tr><td>Plus (Studio) Yearly</td><td>27</td><td>6%</td></tr>
+                                <tr><td>Standard (Studio) 2-year</td><td>12</td><td>3%</td></tr>
+                                <tr><td>Other</td><td>19</td><td>4%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p><strong>Standard (Studio) Yearly (249 switch ups)</strong></p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Plus (Studio) Yearly</td><td>182</td><td><strong>73%</strong></td></tr>
+                                <tr><td>Standard (Studio) 2-year</td><td>23</td><td>9%</td></tr>
+                                <tr><td>Standard (Studio) 3-year</td><td>11</td><td>4%</td></tr>
+                                <tr><td>Standard (Studio) Monthly</td><td>11</td><td>4%</td></tr>
+                                <tr><td>Plus (Studio) 2-year</td><td>10</td><td>4%</td></tr>
+                                <tr><td>Other</td><td>12</td><td>5%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p><strong>Standard (Studio) 2-year (37 switch ups)</strong></p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Plus (Studio) 2-year</td><td>22</td><td><strong>59%</strong></td></tr>
+                                <tr><td>Standard (Studio) 3-year</td><td>6</td><td>16%</td></tr>
+                                <tr><td>Plus (Studio) 3-year</td><td>5</td><td>14%</td></tr>
+                                <tr><td>Other</td><td>4</td><td>11%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p><strong>Standard (Studio) 3-year (17 switch ups)</strong></p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Destination</th><th>Volume</th><th>%</th></tr></thead>
+                            <tbody>
+                                <tr><td>Plus (Studio) 3-year</td><td>17</td><td><strong>100%</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>OTHER & LEGACY PLANS (6,715 Total Switch Ups)</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Plan</th><th>Switch Ups</th><th>Notes</th></tr></thead>
+                            <tbody>
+                                <tr><td>Business Basic (Legacy)</td><td>3,262</td><td>Grandfathered, upgrade only</td></tr>
+                                <tr><td>Combo (Legacy)</td><td>1,262</td><td>Discontinued</td></tr>
+                                <tr><td>Business Unlimited (Legacy)</td><td>760</td><td>Grandfathered</td></tr>
+                                <tr><td>Pro (Legacy)</td><td>212</td><td>Discontinued</td></tr>
+                                <tr><td>Plus (Studio)</td><td>174</td><td>Top tier, minimal upgrades</td></tr>
+                                <tr><td>Business VIP (Legacy)</td><td>161</td><td>Grandfathered</td></tr>
+                                <tr><td>Business Elite</td><td>142</td><td>Top tier, minimal upgrades</td></tr>
+                                <tr><td>Connect Domain (Legacy)</td><td>114</td><td>Discontinued</td></tr>
+                                <tr><td>Other small/regional plans</td><td>628</td><td>Various legacy & promotional</td></tr>
+                                <tr style="background: var(--bg-alt); font-weight: 600;"><td><strong>Total Other/Legacy</strong></td><td><strong>6,715</strong></td><td></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Key Patterns Summary -->
+                <section id="patterns-summary">
+                    <h3>Key Patterns Summary</h3>
+                    <p class="section-desc">Overview of the two main upgrade behaviors: cycle extension (same plan, longer commitment) and tier jump (moving to a higher-tier plan).</p>
+                    
+                    <h4>1. Cycle Extension (~55% of all switch ups, ~54,000 events)</h4>
+                    <p>Users extend billing period within same plan:</p>
+                    <ul>
+                        <li><strong>Monthly → Yearly</strong>: Dominant for all plans</li>
+                        <li><strong>Yearly → 2-year</strong>: Especially Core (57%), Business (64%)</li>
+                        <li><strong>2-year → 3-year</strong>: Core (78%), Business (80%)</li>
+                    </ul>
+                    
+                    <h4>2. Tier Jump (~45% of all switch ups, ~44,200 events)</h4>
+                    <p>Users move to higher-tier plan:</p>
+                    <ul>
+                        <li><strong>Light → Core</strong>: 23,150 events</li>
+                        <li><strong>Core → Business</strong>: 8,430 events</li>
+                        <li><strong>Light → Business</strong>: 4,714 events</li>
+                        <li><strong>Basic → Standard → Plus (Studio)</strong>: Studio plan progression</li>
+                    </ul>
+                    
+                    <h4>3. Timing</h4>
+                    <ul>
+                        <li><strong>Monthly users</strong>: Upgrade fastest (median ~200 days, majority within 1 year)</li>
+                        <li><strong>Yearly users</strong>: Upgrade at renewal (median ~1 year)</li>
+                        <li><strong>Multi-year users</strong>: Upgrade at end of term (median 2-3 years)</li>
+                    </ul>
+                </section>
+                
+                <!-- Entry Points -->
+                <section id="entry-points">
+                    <h3>Entry Points - All Switch Ups</h3>
+                    <p class="section-desc">Where users come from when they initiate a switch up through Package Picker. Top entry points by unique users.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Top 10 Entry Points by Unique Users</div>
+                        <canvas id="entryPointsChart" height="300"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Entry Point</th><th>Unique Users</th><th>Purchases</th><th>E2E CR</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>bizMgrHeader</td><td>120,021</td><td>7,351</td><td>6.1%</td></tr>
+                                <tr><td>BIZ_MANAGER_HOME_LB</td><td>114,083</td><td>12,370</td><td><strong>10.8%</strong></td></tr>
+                                <tr><td>my_subscriptions (url)</td><td>78,378</td><td>8,403</td><td><strong>10.7%</strong></td></tr>
+                                <tr><td>dashboard (url)</td><td>66,542</td><td>6,704</td><td><strong>10.1%</strong></td></tr>
+                                <tr><td>site-home-mobile</td><td>59,480</td><td>2,669</td><td>4.5%</td></tr>
+                                <tr><td>dashboard_premium_banner</td><td>36,365</td><td>3,803</td><td><strong>10.5%</strong></td></tr>
+                                <tr><td>manage.wix.com (other url)</td><td>23,366</td><td>984</td><td>4.2%</td></tr>
+                                <tr><td>my_subscriptions_dropdown</td><td>19,150</td><td>2,553</td><td><strong>13.3%</strong></td></tr>
+                                <tr><td>gfpp</td><td>19,128</td><td>200</td><td>1.0%</td></tr>
+                                <tr><td>email_mkt</td><td>16,775</td><td>2,971</td><td><strong>17.7%</strong></td></tr>
+                                <tr><td>studio (url)</td><td>16,429</td><td>1,314</td><td>8.0%</td></tr>
+                                <tr><td>TOP_BAR_UPGRADE_MENU_COMPARE_PLANS_0520</td><td>13,306</td><td>492</td><td>3.7%</td></tr>
+                                <tr><td>AssignAndUpgrdeToStudio</td><td>11,473</td><td>6,591</td><td><strong>57.4%</strong></td></tr>
+                                <tr><td>Unknown (no URL)</td><td>11,417</td><td>834</td><td>7.3%</td></tr>
+                                <tr><td>edhtml_TOP_BAR_UPGRADE_MENU_COMPARE_PLANS_DEALER</td><td>10,138</td><td>734</td><td>7.2%</td></tr>
+                                <tr><td>HelpCenter</td><td>9,226</td><td>726</td><td>7.9%</td></tr>
+                                <tr><td>TOP_BAR_UPGRADE_MENU_UPGRADE_NOW_0520</td><td>8,908</td><td>501</td><td>5.6%</td></tr>
+                                <tr><td>edhtml_TOP_BAR_UPGRADE_MENU_PS_DEALER</td><td>8,647</td><td>1,196</td><td><strong>13.8%</strong></td></tr>
+                                <tr><td>media_manager_storage_upgrade</td><td>8,639</td><td>2,149</td><td><strong>24.9%</strong></td></tr>
+                                <tr><td>Other (url)</td><td>7,373</td><td>553</td><td>7.5%</td></tr>
+                                <tr><td>add-domain-purchase-intent</td><td>7,246</td><td>144</td><td>2.0%</td></tr>
+                                <tr><td>{refferalInfo}</td><td>6,289</td><td>1,104</td><td><strong>17.6%</strong></td></tr>
+                                <tr><td>mobile-site-selector</td><td>5,657</td><td>813</td><td><strong>14.4%</strong></td></tr>
+                                <tr><td>google (external)</td><td>5,147</td><td>139</td><td>2.7%</td></tr>
+                                <tr><td>editor (url)</td><td>5,045</td><td>132</td><td>2.6%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <blockquote><strong>Note on URL Fallback:</strong> When <code>referral_additional_info</code> is null, the query categorizes by <code>referral</code> URL. "Unknown (no URL)" = both fields are null (~11K users, 7.3% CR).</blockquote>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Query
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Query - Entry Points</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">-- Daily user-level Entry Points with URL fallback for nulls
+WITH sessions_with_entry_point AS (
+  SELECT 
+    uuid,
+    DATE(first_pp_view_date) as view_date,
+    first_pp_view_date,
+    -- Use referral_additional_info, fallback to categorized URL if null
+    COALESCE(
+      referral_additional_info,
+      CASE 
+        WHEN referral LIKE '%/account/subscriptions%' THEN 'my_subscriptions (url)'
+        WHEN referral LIKE '%/dashboard%' THEN 'dashboard (url)'
+        WHEN referral LIKE '%/studio%' THEN 'studio (url)'
+        WHEN referral LIKE '%editor.wix.com%' THEN 'editor (url)'
+        WHEN referral LIKE '%google%' THEN 'google (external)'
+        WHEN referral LIKE '%manage.wix.com%' THEN 'manage.wix.com (other url)'
+        WHEN referral IS NULL THEN 'Unknown (no URL)'
+        ELSE 'Other (url)'
+      END
+    ) as entry_point,
+    first_purchase_date
+  FROM prod.premium.package_picker_sessions_log
+  WHERE first_pp_view_date >= DATE '2025-07-01' 
+    AND first_pp_view_date < DATE '2025-10-01'
+    AND is_new_purchase = false
+),
+-- For each user per day, take the FIRST entry point by time using min_by
+user_day_referral AS (
+  SELECT 
+    uuid,
+    view_date,
+    min_by(entry_point, first_pp_view_date) as first_entry_point,
+    MAX(CASE WHEN first_purchase_date IS NOT NULL THEN 1 ELSE 0 END) as did_purchase
+  FROM sessions_with_entry_point
+  GROUP BY uuid, view_date
+)
+-- Count distinct users per entry point
+SELECT 
+  first_entry_point as entry_point,
+  COUNT(DISTINCT uuid) as unique_users,
+  SUM(did_purchase) as purchases,
+  ROUND(100.0 * SUM(did_purchase) / COUNT(DISTINCT uuid), 1) as cr_pct
+FROM user_day_referral
+GROUP BY first_entry_point
+ORDER BY unique_users DESC
+LIMIT 25</pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- PP Funnel -->
+                <section id="pp-funnel">
+                    <h3>Package Picker Funnel</h3>
+                    <p class="section-desc">Step-by-step conversion through the Package Picker flow for users with existing premium subscriptions.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">PP Funnel - Switch Up Intent</div>
+                        <canvas id="ppFunnelChart" height="200"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Funnel Step</th><th>Users</th><th>Step CVR</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>PP View</td><td><strong>709,549 (100%)</strong></td><td>-</td></tr>
+                                <tr><td>→ Cycle Page</td><td><strong>210,067 (29.6%)</strong></td><td><strong>29.6%</strong></td></tr>
+                                <tr><td>→ Checkout</td><td><strong>136,017 (19.2%)</strong></td><td><strong>64.7%</strong></td></tr>
+                                <tr><td>→ Submit</td><td><strong>80,943 (11.4%)</strong></td><td><strong>59.5%</strong></td></tr>
+                                <tr><td>→ Purchase</td><td><strong>77,177 (10.9%)</strong></td><td><strong>95.3%</strong></td></tr>
+                                <tr style="background: var(--bg-alt); font-weight: 600;"><td><strong>Overall</strong></td><td>-</td><td><strong>10.9%</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h4>Switch Ups by Flow</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Flow</th><th>Switch Type</th><th>Count</th><th>%</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Via Package Picker</td><td>Cycle Change</td><td>39,999</td><td>40.3%</td></tr>
+                                <tr><td>Via Package Picker</td><td>Tier/Product Change</td><td>30,088</td><td>30.3%</td></tr>
+                                <tr><td><strong>Change Cycle Flow</strong></td><td><strong>Cycle Change</strong></td><td><strong>~8,087</strong></td><td><strong>~8.1%</strong></td></tr>
+                                <tr><td>Outside PP (other)</td><td>Mixed</td><td>~21,226</td><td>~21.4%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Query
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Query - PP Funnel</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">WITH daily_users AS (
+  SELECT 
+    DATE(pp.first_pp_view_date) as view_date,
+    pp.uuid,
+    MAX(CASE WHEN pp.first_pp_view_date IS NOT NULL THEN 1 ELSE 0 END) as viewed_pp,
+    MAX(CASE WHEN pp.first_cycle_page_date IS NOT NULL THEN 1 ELSE 0 END) as viewed_cycle,
+    MAX(CASE WHEN pp.first_checkout_page_date IS NOT NULL THEN 1 ELSE 0 END) as viewed_checkout,
+    MAX(CASE WHEN pp.first_submit_date IS NOT NULL THEN 1 ELSE 0 END) as submitted,
+    MAX(CASE WHEN pp.first_purchase_date IS NOT NULL THEN 1 ELSE 0 END) as purchased
+  FROM prod.premium.package_picker_sessions_log pp
+  INNER JOIN prod.wt_accounts.accounts acc ON pp.uuid = acc.uuid
+  WHERE pp.first_pp_view_date >= DATE '2025-07-01'
+    AND pp.first_pp_view_date < DATE '2025-10-01'
+    AND pp.is_new_purchase = false
+  GROUP BY DATE(pp.first_pp_view_date), pp.uuid
+),
+monthly_funnel AS (
+  SELECT 
+    DATE_TRUNC('month', view_date) as month_start,
+    COUNT(DISTINCT CASE WHEN viewed_pp = 1 THEN uuid END) as pp_viewers,
+    COUNT(DISTINCT CASE WHEN viewed_cycle = 1 THEN uuid END) as cycle_viewers,
+    COUNT(DISTINCT CASE WHEN viewed_checkout = 1 THEN uuid END) as checkout_viewers,
+    COUNT(DISTINCT CASE WHEN submitted = 1 THEN uuid END) as submitters,
+    COUNT(DISTINCT CASE WHEN purchased = 1 THEN uuid END) as purchasers
+  FROM daily_users
+  GROUP BY DATE_TRUNC('month', view_date)
+)
+SELECT 
+  SUM(pp_viewers) as total_pp_viewers,
+  SUM(cycle_viewers) as total_cycle_viewers,
+  SUM(checkout_viewers) as total_checkout_viewers,
+  SUM(submitters) as total_submitters,
+  SUM(purchasers) as total_purchasers,
+  ROUND(100.0 * SUM(cycle_viewers) / NULLIF(SUM(pp_viewers), 0), 1) as cvr_pp_to_cycle,
+  ROUND(100.0 * SUM(checkout_viewers) / NULLIF(SUM(cycle_viewers), 0), 1) as cvr_cycle_to_checkout,
+  ROUND(100.0 * SUM(submitters) / NULLIF(SUM(checkout_viewers), 0), 1) as cvr_checkout_to_submit,
+  ROUND(100.0 * SUM(purchasers) / NULLIF(SUM(submitters), 0), 1) as cvr_submit_to_purchase,
+  ROUND(100.0 * SUM(purchasers) / NULLIF(SUM(pp_viewers), 0), 1) as cvr_overall
+FROM monthly_funnel</pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Change Cycle Flow -->
+                <section id="change-cycle">
+                    <h3>Change Cycle Flow Funnel</h3>
+                    <p class="section-desc">Alternative flow for cycle changes that bypasses Package Picker, accessed via My Subscriptions → Change Billing Cycle.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Change Cycle Flow Steps</div>
+                        <canvas id="changeCycleChart" height="200"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Step</th><th>Event</th><th>Users</th><th>Step CVR</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1. Popup View</td><td>evid 4882</td><td><strong>60,370</strong></td><td>-</td></tr>
+                                <tr><td>2. Select Cycle</td><td>evid 4883</td><td><strong>25,943</strong></td><td>43.0%</td></tr>
+                                <tr><td>3. Continue to Checkout</td><td>evid 4884 (continue)</td><td><strong>19,377</strong></td><td>32.1%</td></tr>
+                                <tr><td>4. Purchase Success</td><td>checkout_success</td><td><strong>~8,087</strong></td><td><strong>41.7%</strong></td></tr>
+                                <tr style="background: var(--bg-alt); font-weight: 600;"><td><strong>Overall CVR</strong></td><td></td><td></td><td><strong>~13.4%</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <blockquote>⚠️ <strong>Data Uncertainty Note:</strong> The Change Cycle Flow data should be treated with caution. The checkout data (Step 4) is estimated and may not be fully accurate.</blockquote>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Queries
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Queries - Change Cycle Flow</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">-- Change Cycle Flow Funnel (Q3 2025)
+SELECT 
+    evid,
+    CASE evid
+        WHEN 4882 THEN '1. Popup View'
+        WHEN 4883 THEN '2. Select Cycle'
+        WHEN 4884 THEN '3. Click Action'
+        WHEN 4885 THEN '4. Summary View (downgrades)'
+        WHEN 4886 THEN '5. Summary Click'
+    END as funnel_step,
+    COUNT(*) as events,
+    COUNT(DISTINCT uuid) as unique_users
+FROM events.dbo.users_17
+WHERE evid IN (4882, 4883, 4884, 4885, 4886)
+  AND date_created >= TIMESTAMP '2025-07-01 00:00:00'
+  AND date_created < TIMESTAMP '2025-10-01 00:00:00'
+GROUP BY evid
+ORDER BY evid;
+
+-- Click action breakdown
+SELECT click_type, COUNT(DISTINCT uuid) as unique_users
+FROM events.dbo.users_17
+WHERE evid = 4884
+  AND date_created >= TIMESTAMP '2025-07-01 00:00:00'
+  AND date_created < TIMESTAMP '2025-10-01 00:00:00'
+GROUP BY click_type;
+
+-- Track through checkout
+WITH change_cycle_users AS (
+    SELECT DISTINCT uuid
+    FROM events.dbo.users_17
+    WHERE evid = 4884 AND click_type = 'continue'
+      AND date_created >= TIMESTAMP '2025-07-01 00:00:00'
+      AND date_created < TIMESTAMP '2025-10-01 00:00:00'
+)
+SELECT 
+    COUNT(DISTINCT c.uuid) as users_clicked_continue,
+    COUNT(DISTINCT CASE WHEN cs.did_checkout_success = true THEN c.uuid END) as users_purchased
+FROM change_cycle_users c
+LEFT JOIN prod.premium.checkout_sessions_log cs 
+    ON c.uuid = cs.uuid
+    AND cs.checkout_click_time >= TIMESTAMP '2025-07-01 00:00:00'
+    AND cs.checkout_click_time < TIMESTAMP '2025-10-01 00:00:00'
+    AND cs.initiator_flow = 'Change existing service';</pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Top Paths -->
+                <section id="top-paths">
+                    <h3>Top 10 Switch Up Paths (by Volume)</h3>
+                    <p class="section-desc">Most common upgrade paths showing where users start and where they end up. Top 10 paths account for 87.2% of all switch ups.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Top 10 Switch Up Paths</div>
+                        <canvas id="topPathsChart" height="300"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>#</th><th>From</th><th>To</th><th>Total</th><th>%</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1</td><td>Core</td><td>Core (cycle extension)</td><td>25,864</td><td>26.3%</td></tr>
+                                <tr><td>2</td><td>Light</td><td>Core</td><td>23,150</td><td>23.6%</td></tr>
+                                <tr><td>3</td><td>Core</td><td>Business</td><td>8,430</td><td>8.6%</td></tr>
+                                <tr><td>4</td><td>Business</td><td>Business (cycle extension)</td><td>7,418</td><td>7.6%</td></tr>
+                                <tr><td>5</td><td>Light</td><td>Business</td><td>4,714</td><td>4.8%</td></tr>
+                                <tr><td>6</td><td>Light</td><td>Light (cycle extension)</td><td>4,536</td><td>4.6%</td></tr>
+                                <tr><td>7</td><td>Unlimited (Legacy)</td><td>Unlimited (Legacy) (cycle swap)</td><td>3,676</td><td>3.7%</td></tr>
+                                <tr><td>8</td><td>Business Basic (Legacy)</td><td>Business Basic (Legacy) (cycle swap)</td><td>2,779</td><td>2.8%</td></tr>
+                                <tr><td>9</td><td>Core</td><td>Standard (Studio)</td><td>2,703</td><td>2.8%</td></tr>
+                                <tr><td>10</td><td>Light</td><td>Basic (Studio)</td><td>2,307</td><td>2.4%</td></tr>
+                                <tr style="background: var(--bg-alt); font-weight: 600;"><td></td><td colspan="2"><strong>Top 10 Total</strong></td><td>85,577</td><td>87.2%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Query
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Query - Top 10 Paths</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">SELECT 
+  previous_product_name as from_plan,
+  product_name as to_plan,
+  COUNT(*) as total
+FROM prod.premium.subscriptions_premium_plan_scd
+WHERE start_action = 'switch up'
+  AND is_uuid_wix_user = false
+  AND start_date >= DATE '2025-07-01' 
+  AND start_date < DATE '2025-10-01'
+GROUP BY previous_product_name, product_name
+ORDER BY total DESC
+LIMIT 10</pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Quick Reference -->
+                <section id="quick-ref">
+                    <h3>Quick Reference: Most Common Path from Each Plan</h3>
+                    <p class="section-desc">For each plan and cycle combination, the most common destination when users switch up.</p>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Plan</th><th>Monthly</th><th>Yearly</th><th>2-year</th><th>3-year</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Light</strong></td>
+                                    <td>Core Monthly (6,204 / 51%)</td>
+                                    <td>Core Yearly (8,274 / 59%)</td>
+                                    <td>Core 2-year (1,690 / 48%)</td>
+                                    <td>Core 3-year (804 / 86%)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Core</strong></td>
+                                    <td>Core Yearly (2,210 / 47%)</td>
+                                    <td>Core 2-year (11,950 / 59%)</td>
+                                    <td>Core 3-year (7,987 / 78%)</td>
+                                    <td>Business 3-year (998 / 89%)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Business</strong></td>
+                                    <td>Business Yearly (1,251 / 57%)</td>
+                                    <td>Business 2-year (2,950 / 61%)</td>
+                                    <td>Business 3-year (2,086 / 77%)</td>
+                                    <td>Plus (Studio) 3-year (114 / 77%)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Unlimited (Legacy)</strong></td>
+                                    <td>Unlimited Yearly (1,736 / 92%)</td>
+                                    <td>Unlimited Monthly (1,882 / 74%)</td>
+                                    <td>Core 2-year (381 / 41%)</td>
+                                    <td>Core 3-year (219 / 80%)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Basic (Studio)</strong></td>
+                                    <td>Standard (Studio) Monthly (1,070 / 55%)</td>
+                                    <td>Standard (Studio) Yearly (801 / 54%)</td>
+                                    <td>Standard (Studio) 2-year (121 / 47%)</td>
+                                    <td>Standard (Studio) 3-year (48 / 54%)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Standard (Studio)</strong></td>
+                                    <td>Plus (Studio) Monthly (267 / 66%)</td>
+                                    <td>Plus (Studio) Yearly (182 / 59%)</td>
+                                    <td>Plus (Studio) 2-year (22 / 42%)</td>
+                                    <td>Plus (Studio) 3-year (17 / 63%)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h4>Section Totals Verification</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Section</th><th>Switch Ups</th><th>% of Total</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Core Plans</strong></td><td><strong>37,525</strong></td><td><strong>38.2%</strong></td></tr>
+                                <tr><td><strong>Light Plans</strong></td><td><strong>35,077</strong></td><td><strong>35.7%</strong></td></tr>
+                                <tr><td><strong>Business Plans</strong></td><td><strong>9,360</strong></td><td><strong>9.5%</strong></td></tr>
+                                <tr><td><strong>Unlimited (Legacy)</strong></td><td><strong>5,464</strong></td><td><strong>5.6%</strong></td></tr>
+                                <tr><td><strong>Wix Studio Plans</strong></td><td><strong>4,055</strong></td><td><strong>4.1%</strong></td></tr>
+                                <tr><td><strong>Other & Legacy Plans</strong></td><td><strong>6,715</strong></td><td><strong>6.8%</strong></td></tr>
+                                <tr style="background: var(--bg-alt); font-weight: 600;"><td><strong>Grand Total</strong></td><td><strong>98,196</strong></td><td><strong>100%</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Geography -->
+                <section id="geography">
+                    <h3>Geography Breakdown</h3>
+                    <p class="section-desc">Geographic distribution of switch ups by country. US leads significantly, followed by UK and other English-speaking markets.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Top Countries by Switch Up Volume</div>
+                        <canvas id="geoChart" height="300"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Country</th><th>Sites</th><th>%</th><th>Cumulative %</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>US</strong></td><td><strong>27,591</strong></td><td><strong>28.8%</strong></td><td>28.8%</td></tr>
+                                <tr><td>Unknown</td><td>18,109</td><td>18.9%</td><td>47.7%</td></tr>
+                                <tr><td><strong>GB</strong></td><td><strong>7,107</strong></td><td><strong>7.4%</strong></td><td>55.1%</td></tr>
+                                <tr><td><strong>CA</strong></td><td><strong>4,487</strong></td><td><strong>4.7%</strong></td><td>59.8%</td></tr>
+                                <tr><td>FR</td><td>3,419</td><td>3.6%</td><td>63.4%</td></tr>
+                                <tr><td>BR</td><td>3,249</td><td>3.4%</td><td>66.8%</td></tr>
+                                <tr><td>IN</td><td>3,100</td><td>3.2%</td><td>70.0%</td></tr>
+                                <tr><td>AU</td><td>3,046</td><td>3.2%</td><td>73.2%</td></tr>
+                                <tr><td>DE</td><td>2,324</td><td>2.4%</td><td>75.6%</td></tr>
+                                <tr><td>JP</td><td>1,828</td><td>1.9%</td><td>77.5%</td></tr>
+                                <tr><td>CH</td><td>1,537</td><td>1.6%</td><td>79.1%</td></tr>
+                                <tr><td>MX</td><td>1,136</td><td>1.2%</td><td>80.3%</td></tr>
+                                <tr><td>TR</td><td>1,120</td><td>1.2%</td><td>81.5%</td></tr>
+                                <tr><td>IT</td><td>1,075</td><td>1.1%</td><td>82.6%</td></tr>
+                                <tr><td>NL</td><td>1,009</td><td>1.1%</td><td>83.7%</td></tr>
+                                <tr><td>ES</td><td>1,003</td><td>1.0%</td><td>84.7%</td></tr>
+                                <tr><td>IL</td><td>957</td><td>1.0%</td><td>85.7%</td></tr>
+                                <tr><td>BE</td><td>704</td><td>0.7%</td><td>86.4%</td></tr>
+                                <tr><td>AT</td><td>681</td><td>0.7%</td><td>87.1%</td></tr>
+                                <tr><td>ZA</td><td>587</td><td>0.6%</td><td>87.7%</td></tr>
+                                <tr><td>NZ</td><td>572</td><td>0.6%</td><td>88.3%</td></tr>
+                                <tr><td>IE</td><td>490</td><td>0.5%</td><td>88.8%</td></tr>
+                                <tr><td>HK</td><td>486</td><td>0.5%</td><td>89.3%</td></tr>
+                                <tr><td>CO</td><td>466</td><td>0.5%</td><td>89.8%</td></tr>
+                                <tr><td>KR</td><td>448</td><td>0.5%</td><td>90.3%</td></tr>
+                                <tr><td>SG</td><td>441</td><td>0.5%</td><td>90.8%</td></tr>
+                                <tr><td>TW</td><td>411</td><td>0.4%</td><td>91.2%</td></tr>
+                                <tr><td>PT</td><td>405</td><td>0.4%</td><td>91.6%</td></tr>
+                                <tr><td>PL</td><td>403</td><td>0.4%</td><td>92.0%</td></tr>
+                                <tr><td>Other (~138 countries)</td><td>7,659</td><td>8.0%</td><td>100%</td></tr>
+                                <tr style="background: var(--bg-alt); font-weight: 600;"><td><strong>Total</strong></td><td><strong>95,698</strong></td><td><strong>100%</strong></td><td>-</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <blockquote><strong>"Unknown" = switch ups without Package Picker session data</strong> (~18.9%). These are sites that performed switch ups but don't have matching PP session data (e.g., via customer support, direct API, Change Cycle flow, or tracking gaps).</blockquote>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Query
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Query - Geography</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">WITH all_events AS (
+  SELECT subscription_id, uuid, msid, start_date,
+    ROW_NUMBER() OVER (PARTITION BY uuid, msid ORDER BY start_date) as rn
+  FROM prod.premium.subscriptions_premium_plan_scd
+  WHERE start_action = 'switch up'
+    AND is_uuid_wix_user = false
+    AND start_date >= DATE '2025-07-01' AND start_date < DATE '2025-10-01'
+),
+first_switch_up AS (
+  SELECT subscription_id, uuid, msid, start_date
+  FROM all_events
+  WHERE rn = 1
+),
+site_country AS (
+  SELECT 
+    e.uuid, 
+    e.msid,
+    COALESCE(min_by(pp.country_code, pp.first_pp_view_date), 'Unknown') as country
+  FROM first_switch_up e
+  LEFT JOIN prod.premium.package_picker_sessions_log pp 
+    ON e.subscription_id = pp.purchased_subscription_id
+    AND DATE(pp.first_pp_view_date) = DATE(e.start_date)
+  GROUP BY e.uuid, e.msid
+)
+SELECT
+  country,
+  COUNT(*) as sites,
+  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1) as pct
+FROM site_country
+GROUP BY country
+ORDER BY sites DESC</pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Device PP Funnel -->
+                <section id="device-pp">
+                    <h3>Device Breakdown - PP Funnel Analysis</h3>
+                    <p class="section-desc">Comparison of Package Picker performance across devices. Computer users convert at 2x the rate of mobile users.</p>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Unique Users vs Purchases by Device</div>
+                        <canvas id="devicePPChart" height="200"></canvas>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Device</th><th>Unique Users</th><th>% Users</th><th>Purchases</th><th>% Purchases</th><th>CR</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Computer</strong></td><td>550,918</td><td><strong>85.9%</strong></td><td>72,527</td><td><strong>92.6%</strong></td><td><strong>13.2%</strong></td></tr>
+                                <tr><td><strong>Mobile</strong></td><td>89,603</td><td><strong>14.0%</strong></td><td>5,750</td><td><strong>7.3%</strong></td><td><strong>6.4%</strong></td></tr>
+                                <tr><td>Tablet</td><td>874</td><td>0.1%</td><td>79</td><td>0.1%</td><td>9.0%</td></tr>
+                                <tr><td>Unknown</td><td>11</td><td>0.0%</td><td>5</td><td>0.0%</td><td>45.5%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="sql-toggle" onclick="toggleSQL(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        View SQL Query
+                    </button>
+                    <div class="sql-content">
+                        <div class="sql-block">
+                            <div class="sql-header">
+                                <span class="sql-label">SQL Query - Device PP Funnel</span>
+                                <button class="copy-btn" onclick="copySQL(this)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="sql-code">-- Daily user-level funnel: first device per user per day using min_by
+WITH daily_user_device AS (
+  SELECT 
+    DATE(first_pp_view_date) as view_date,
+    uuid,
+    -- Take first device_type per user per day by earliest session time
+    min_by(device_type, first_pp_view_date) as device_type,
+    MAX(CASE WHEN first_purchase_date IS NOT NULL THEN 1 ELSE 0 END) as did_purchase
+  FROM prod.premium.package_picker_sessions_log
+  WHERE first_pp_view_date >= DATE '2025-07-01' 
+    AND first_pp_view_date < DATE '2025-10-01'
+    AND is_new_purchase = false
+  GROUP BY DATE(first_pp_view_date), uuid
+)
+SELECT 
+  device_type,
+  COUNT(DISTINCT uuid) as unique_users,
+  ROUND(100.0 * COUNT(DISTINCT uuid) / SUM(COUNT(DISTINCT uuid)) OVER (), 1) as pct_users,
+  SUM(did_purchase) as purchases,
+  ROUND(100.0 * SUM(did_purchase) / SUM(SUM(did_purchase)) OVER (), 1) as pct_purchases,
+  ROUND(100.0 * SUM(did_purchase) / COUNT(DISTINCT uuid), 1) as cr_pct
+FROM daily_user_device
+GROUP BY device_type
+ORDER BY unique_users DESC</pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Data Period -->
+                <section id="data-period">
+                    <h3>Data Period & Methodology</h3>
+                    <p class="section-desc">Technical details about the data analysis including time period, counting methods, and data sources.</p>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Attribute</th><th>Value</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Analysis Period</strong></td><td><strong>Q3 2025</strong> (2025-07-01 to 2025-09-30)</td></tr>
+                                <tr><td><strong>Counting Method</strong></td><td><strong>Site-level</strong> (per uuid+msid)</td></tr>
+                                <tr><td><strong>Data Source</strong></td><td><code>prod.premium.subscriptions_premium_plan_scd</code></td></tr>
+                                <tr><td><strong>Funnel Data</strong></td><td><code>prod.premium.premium_package_picker_daily_report</code></td></tr>
+                                <tr><td><strong>Data Freshness</strong></td><td>Updated daily</td></tr>
+                                <tr><td><strong>Excluded</strong></td><td>Wix employees (<code>is_uuid_wix_user = false</code>)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Data Sources -->
+                <section id="data-sources">
+                    <h3>Data Sources</h3>
+                    <p class="section-desc">Official data tables used in this analysis, verified against the Sherlock Knowledge Base.</p>
+                    
+                    <h4>Official Tables (per Sherlock KB) - VERIFIED</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Table</th><th>Purpose</th><th>Key Columns</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><code>prod.premium.subscriptions_premium_plan_scd</code> ✅</td><td>Premium plan change history (SCD Type 2)</td><td>uuid, msid, start_action, product_name, previous_product_name, cycle_name, previous_cycle_name, start_date</td></tr>
+                                <tr><td><code>prod.premium.subscriptions_premium_plan_dim</code> ✅</td><td>Current subscription state</td><td>subscription_id, product_id</td></tr>
+                                <tr><td><code>prod.premium.package_picker_sessions_log</code> ✅</td><td>PP session-level data with device_type</td><td>uuid, site_id, device_type, referral_additional_info, country_code, is_new_purchase, first_pp_view_date, first_purchase_date</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Product Context -->
+                <section id="product-context">
+                    <h3>Product Context (from Sherlock KB)</h3>
+                    <p class="section-desc">Overview of Wix's premium plan structure by editor type and target audience.</p>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Editor Type</th><th>Active Plans</th><th>Target Audience</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Classic (Sunrise)</strong></td><td>Light, Core, <strong>Business</strong> (recommended), Business Elite</td><td>Mainstream users, small businesses</td></tr>
+                                <tr><td><strong>Studio</strong></td><td>Basic, Standard, Plus, Elite</td><td>Professional designers, agencies</td></tr>
+                                <tr><td><strong>Legacy (Discontinued)</strong></td><td>Unlimited, Combo, Business Basic, Business Unlimited</td><td>Existing subscribers only (grandfathered)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <blockquote><strong>Note on Legacy Plans:</strong> Legacy products are no longer sold but remain active for existing subscribers. They can upgrade to current plans but cannot downgrade within legacy tiers.</blockquote>
+                </section>
+                
+                <!-- Cursor Rules -->
+                <section id="cursor-rules">
+                    <h3>Cursor Rules: Data Research Best Practices</h3>
+                    <p class="section-desc">Lessons learned from this research that should guide future data analysis sessions.</p>
+                    
+                    <h4>Match Reference Methodology Exactly</h4>
+                    <p>When reproducing someone else's numbers, use their exact SQL query and methodology. Small differences (like including/excluding certain joins or filters) can significantly change results.</p>
+                    
+                    <h4>Verify Totals Before Updating</h4>
+                    <p>Always check that breakdown totals match the expected aggregate. Run a simple sanity check SQL after each section update. If totals don't match, investigate before proceeding.</p>
+                    
+                    <h4>Counting Methodology Matters</h4>
+                    <p>Be explicit about whether you're counting:</p>
+                    <ul>
+                        <li><strong>Events</strong> (total occurrences)</li>
+                        <li><strong>Unique sites</strong> (COUNT(DISTINCT))</li>
+                        <li><strong>Sessions</strong> (PP-specific)</li>
+                    </ul>
+                    <p>Document the counting method used in each section.</p>
+                    
+                    <h4>Unknown/Null Values</h4>
+                    <p>Always account for unknown/null values in breakdowns. Explain what they represent:</p>
+                    <ul>
+                        <li><strong>Device "Unknown"</strong>: Switch ups without PP session data</li>
+                        <li><strong>Geography "Unknown"</strong>: Sites without country tracking</li>
+                        <li><strong>Entry Point "(null)"</strong>: Direct navigation or untracked sources</li>
+                    </ul>
+                    
+                    <h4>Daily User-Level Counting</h4>
+                    <p>For funnel metrics, use daily user-level counting to align with official reports. This avoids double-counting users who visit multiple times.</p>
+                    
+                    <h4>SQL Query Documentation</h4>
+                    <p>Include the exact SQL query for each key metric. This enables:</p>
+                    <ul>
+                        <li>Verification by others</li>
+                        <li>Future updates</li>
+                        <li>Debugging when numbers don't match</li>
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Helper function for tooltips with percentages
+        function tooltipWithPercent(ctx, total) {
+            const value = ctx.raw;
+            const percent = ((value / total) * 100).toFixed(1);
+            return `${ctx.dataset.label}: ${value.toLocaleString()} (${percent}%)`;
+        }
+        
+        // SQL toggle function
+        function toggleSQL(btn) {
+            btn.classList.toggle('open');
+            const content = btn.nextElementSibling;
+            content.classList.toggle('open');
+        }
+        
+        // Copy SQL function
+        function copySQL(btn) {
+            const code = btn.closest('.sql-block').querySelector('.sql-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.classList.add('copied');
+                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+                }, 2000);
+            });
+        }
+        
+        // Sortable tables
+        document.querySelectorAll('th').forEach(th => {
+            th.addEventListener('click', function() {
+                const table = this.closest('table');
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                const idx = Array.from(this.parentElement.children).indexOf(this);
+                const isAsc = this.classList.contains('sort-asc');
+                
+                // Remove sort classes from all headers
+                table.querySelectorAll('th').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+                
+                // Add appropriate class
+                this.classList.add(isAsc ? 'sort-desc' : 'sort-asc');
+                
+                // Separate regular rows and total row
+                const totalRow = rows.find(r => r.querySelector('td strong')?.textContent?.toLowerCase().includes('total') || r.style.background);
+                const dataRows = rows.filter(r => r !== totalRow);
+                
+                // Sort data rows
+                dataRows.sort((a, b) => {
+                    const aVal = a.children[idx]?.textContent.replace(/[^0-9.-]/g, '') || a.children[idx]?.textContent || '';
+                    const bVal = b.children[idx]?.textContent.replace(/[^0-9.-]/g, '') || b.children[idx]?.textContent || '';
+                    const aNum = parseFloat(aVal);
+                    const bNum = parseFloat(bVal);
+                    
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return isAsc ? aNum - bNum : bNum - aNum;
+                    }
+                    return isAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                });
+                
+                // Rebuild table
+                tbody.innerHTML = '';
+                dataRows.forEach(r => tbody.appendChild(r));
+                if (totalRow) tbody.appendChild(totalRow);
+            });
+        });
+        
+        // Charts
+        const chartOptions = {
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false } } }
+        };
+        
+        // Distribution Chart
+        const distributionData = [72363, 19733, 4226, 1214, 369, 149, 76, 27, 15, 24];
+        const distributionTotal = distributionData.reduce((a, b) => a + b, 0);
+        new Chart(document.getElementById('distributionChart'), {
+            type: 'bar',
+            data: {
+                labels: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th+'],
+                datasets: [{ label: 'Events', data: distributionData, backgroundColor: '#116DFF', borderRadius: 4 }]
+            },
+            options: {
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => tooltipWithPercent(ctx, distributionTotal) } } },
+                scales: { x: { grid: { display: false } } }
+            }
+        });
+        
+        // Device Chart
+        const deviceData = [72383, 18104, 5131, 80];
+        const deviceTotal = deviceData.reduce((a, b) => a + b, 0);
+        new Chart(document.getElementById('deviceChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Computer', 'Unknown', 'Mobile', 'Tablet'],
+                datasets: [{ label: 'Sites', data: deviceData, backgroundColor: ['#116DFF', '#4D96FF', '#8EBDFF', '#C7DFFF'], borderRadius: 4 }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => tooltipWithPercent(ctx, deviceTotal) } } },
+                scales: { x: { grid: { display: false } } }
+            }
+        });
+        
+        // Funnel Chart
+        const funnelData = [507595, 72363, 19733, 4226, 1214, 660];
+        const funnelTotal = funnelData.reduce((a, b) => a + b, 0);
+        new Chart(document.getElementById('funnelChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Initial Purchases', '1st Switch Up', '2nd Switch Up', '3rd Switch Up', '4th Switch Up', '5th+'],
+                datasets: [{ label: 'Count', data: funnelData, backgroundColor: '#116DFF', borderRadius: 4 }]
+            },
+            options: {
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => tooltipWithPercent(ctx, funnelTotal) } } },
+                scales: { y: { type: 'logarithmic' } }
+            }
+        });
+        
+        // Pattern Chart
+        const patternData = [54000, 44200];
+        const patternTotal = patternData.reduce((a, b) => a + b, 0);
+        new Chart(document.getElementById('patternChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Cycle Extension', 'Tier Jump'],
+                datasets: [{ label: 'Events', data: patternData, backgroundColor: ['#116DFF', '#4D96FF'], borderRadius: 4 }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => tooltipWithPercent(ctx, patternTotal) } } },
+                scales: { x: { grid: { display: false } } }
+            }
+        });
+        
+        // Timing Chart
+        new Chart(document.getElementById('timingChart'), {
+            type: 'bar',
+            data: {
+                labels: ['1st Switch Up', '2nd Switch Up', '3rd Switch Up', '4th Switch Up', '5th Switch Up'],
+                datasets: [{ label: 'Median Days', data: [584, 1157, 1921, 2312, 2587], backgroundColor: '#116DFF', borderRadius: 4 }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: 'Days' } } }
+            }
+        });
+        
+        // Entry Points Chart
+        const entryPointsData = [120021, 114083, 78378, 66542, 59480, 36365, 23366, 19150, 19128, 16775];
+        const entryPointsTotal = entryPointsData.reduce((a, b) => a + b, 0);
+        new Chart(document.getElementById('entryPointsChart'), {
+            type: 'bar',
+            data: {
+                labels: ['bizMgrHeader', 'BIZ_MANAGER_HOME_LB', 'my_subscriptions (url)', 'dashboard (url)', 'site-home-mobile', 'dashboard_premium_banner', 'manage.wix.com (other url)', 'my_subscriptions_dropdown', 'gfpp', 'email_mkt'],
+                datasets: [{ label: 'Unique Users', data: entryPointsData, backgroundColor: '#116DFF', borderRadius: 4 }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => tooltipWithPercent(ctx, entryPointsTotal) } } },
+                scales: { x: { grid: { display: false } } }
+            }
+        });
+        
+        // PP Funnel Chart
+        const ppFunnelData = [709549, 210067, 136017, 80943, 77177];
+        const ppFunnelTotal = ppFunnelData[0];
+        new Chart(document.getElementById('ppFunnelChart'), {
+            type: 'bar',
+            data: {
+                labels: ['PP View', 'Cycle Page', 'Checkout', 'Submit', 'Purchase'],
+                datasets: [{ label: 'Users', data: ppFunnelData, backgroundColor: ['#116DFF', '#2B85FF', '#4D96FF', '#8EBDFF', '#00A86B'], borderRadius: 4 }]
+            },
+            options: {
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => tooltipWithPercent(ctx, ppFunnelTotal) } } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+        
+        // Change Cycle Chart
+        const changeCycleData = [60370, 25943, 19377, 8087];
+        const changeCycleTotal = changeCycleData[0];
+        new Chart(document.getElementById('changeCycleChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Popup View', 'Select Cycle', 'Continue to Checkout', 'Purchase Success'],
+                datasets: [{ label: 'Users', data: changeCycleData, backgroundColor: ['#116DFF', '#4D96FF', '#8EBDFF', '#00A86B'], borderRadius: 4 }]
+            },
+            options: {
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => tooltipWithPercent(ctx, changeCycleTotal) } } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+        
+        // Top Paths Chart
+        const topPathsData = [25864, 23150, 8430, 7418, 4714, 4536, 3676, 2779, 2703, 2307];
+        const topPathsTotal = 98196;
+        new Chart(document.getElementById('topPathsChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Core→Core', 'Light→Core', 'Core→Business', 'Business→Business', 'Light→Business', 'Light→Light', 'Unlimited→Unlimited', 'BB(L)→BB(L)', 'Core→Standard', 'Light→Basic'],
+                datasets: [{ label: 'Events', data: topPathsData, backgroundColor: '#116DFF', borderRadius: 4 }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => tooltipWithPercent(ctx, topPathsTotal) } } },
+                scales: { x: { grid: { display: false } } }
+            }
+        });
+        
+        // Geography Chart
+        const geoData = [27591, 18109, 7107, 4487, 3419, 3249, 3100, 3046, 2324, 1828];
+        const geoTotal = 95698;
+        new Chart(document.getElementById('geoChart'), {
+            type: 'bar',
+            data: {
+                labels: ['US', 'Unknown', 'GB', 'CA', 'FR', 'BR', 'IN', 'AU', 'DE', 'JP'],
+                datasets: [{ label: 'Sites', data: geoData, backgroundColor: '#116DFF', borderRadius: 4 }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => tooltipWithPercent(ctx, geoTotal) } } },
+                scales: { x: { grid: { display: false } } }
+            }
+        });
+        
+        // Device PP Chart
+        const devicePPUsersData = [550.9, 89.6, 0.9, 0.0];
+        const devicePPPurchasesData = [72.5, 5.8, 0.1, 0.0];
+        new Chart(document.getElementById('devicePPChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Computer', 'Mobile', 'Tablet', 'Unknown'],
+                datasets: [
+                    { label: 'Unique Users (thousands)', data: devicePPUsersData, backgroundColor: '#116DFF', borderRadius: 4 },
+                    { label: 'Purchases (thousands)', data: devicePPPurchasesData, backgroundColor: '#4D96FF', borderRadius: 4 }
+                ]
+            },
+            options: {
+                plugins: { legend: { display: true, position: 'bottom' } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: 'Thousands' } } }
+            }
+        });
+        
+        // Generate TOC
+        const toc = document.getElementById('toc');
+        const sections = document.querySelectorAll('section[id]');
+        sections.forEach(section => {
+            const h = section.querySelector('h2, h3');
+            if (h) {
+                const li = document.createElement('li');
+                li.className = 'toc-item';
+                const a = document.createElement('a');
+                a.className = 'toc-link' + (h.tagName === 'H3' ? ' h3' : '');
+                a.href = '#' + section.id;
+                a.textContent = h.textContent;
+                li.appendChild(a);
+                toc.appendChild(li);
+            }
+        });
+        
+        // Active TOC tracking
+        let currentActiveId = null;
+        
+        // Handle URL hash on page load (for anchor links)
+        function scrollToHash() {
+            const hash = window.location.hash;
+            if (hash) {
+                const target = document.querySelector(hash);
+                if (target) {
+                    setTimeout(() => {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+            }
+        }
+        
+        // Set initial active state
+        const firstTocItem = document.querySelector('.toc-item');
+        if (firstTocItem && !window.location.hash) {
+            firstTocItem.classList.add('active');
+            currentActiveId = sections[0]?.id;
+        }
+        
+        // Run on page load
+        scrollToHash();
+        
+        // Also handle hash changes
+        window.addEventListener('hashchange', scrollToHash);
+        
+        // Scroll-based active tracking
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrollPos = window.scrollY + 150;
+                    let activeSection = null;
+                    
+                    sections.forEach(section => {
+                        const top = section.offsetTop;
+                        const bottom = top + section.offsetHeight;
+                        
+                        if (scrollPos >= top && scrollPos < bottom) {
+                            activeSection = section;
+                        }
+                    });
+                    
+                    if (activeSection && activeSection.id !== currentActiveId) {
+                        currentActiveId = activeSection.id;
+                        const tocItem = document.querySelector(`.toc-link[href="#${activeSection.id}"]`)?.parentElement;
+                        
+                        if (tocItem) {
+                            document.querySelectorAll('.toc-item').forEach(i => i.classList.remove('active'));
+                            tocItem.classList.add('active');
+                        }
+                    }
+                    
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+        
+        // Smooth scroll with URL hash update
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                const id = href.substring(1);
+                const target = document.getElementById(id);
+                
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Update URL hash without jumping
+                    history.pushState(null, null, href);
+                }
+                closeMobileSidebar();
+            });
+        });
+        
+        // Mobile Menu
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebarClose = document.getElementById('sidebarClose');
+        
+        function openMobileSidebar() {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileSidebar() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        mobileMenuToggle.addEventListener('click', openMobileSidebar);
+        sidebarClose.addEventListener('click', closeMobileSidebar);
+        sidebarOverlay.addEventListener('click', closeMobileSidebar);
+    </script>
+</body>
+</html>
+

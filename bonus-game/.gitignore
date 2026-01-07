@@ -11,3 +11,11 @@ Thumbs.db
 # Temporary files
 expand_dict.js
 *.log
+
+../opsi-insight-nexus/ # ignore opsi-insight-nexus folder
+../playground/
+../pm-skill-cursor.zip
+../pm-skill-cursor/
+../qbo-sale-automation/
+../.DS_Store
+../.cursor/

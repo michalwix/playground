@@ -1,0 +1,25 @@
+{
+  "name": "qbo-sale-automation",
+  "version": "1.0.0",
+  "description": "CLI tool to automate QuickBooks sale creation for Dealer, FireConsole, and BO systems",
+  "main": "cli.js",
+  "bin": {
+    "qbo-sale": "./cli.js"
+  },
+  "scripts": {
+    "test": "node cli.js --help"
+  },
+  "keywords": [
+    "qbo",
+    "sale",
+    "automation",
+    "coupon",
+    "dealer"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
+

@@ -16,6 +16,9 @@ let gameState = {
     },
     isFirstMove: true,
     timerEnabled: false,
+    turnTimeLimit: 0, // seconds per turn (0 = no limit)
+    turnTimerInterval: null,
+    timeRemaining: 0,
     pendingDispute: null, // { word, words, placedThisTurn }
     pendingChallenge: null, // { type, question, answer, points }
     // Online multiplayer
@@ -28,6 +31,104 @@ let gameState = {
 
 // Learned words (from disputes) - load from localStorage
 let learnedWords = JSON.parse(localStorage.getItem('bonusLearnedWords') || '[]');
+
+// High Scores System
+const HIGH_SCORES_KEY = 'bonusGameHighScores';
+
+function saveHighScore(playerName, score, date) {
+    const highScores = JSON.parse(localStorage.getItem(HIGH_SCORES_KEY) || '[]');
+    highScores.push({
+        name: playerName,
+        score: score,
+        date: date || new Date().toISOString(),
+        timestamp: Date.now()
+    });
+    
+    // Keep top 10
+    highScores.sort((a, b) => b.score - a.score);
+    highScores.splice(10);
+    
+    localStorage.setItem(HIGH_SCORES_KEY, JSON.stringify(highScores));
+    console.log('✅ High score saved:', playerName, score);
+}
+
+function getHighScores() {
+    return JSON.parse(localStorage.getItem(HIGH_SCORES_KEY) || '[]');
+}
+
+function displayHighScores() {
+    const scores = getHighScores();
+    const modal = document.getElementById('highScoresModal');
+    const list = document.getElementById('highScoresList');
+    
+    if (!modal || !list) return;
+    
+    if (scores.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">אין שיאים עדיין. שחקו והיו הראשונים!</p>';
+    } else {
+        list.innerHTML = scores.map((s, i) => `
+            <div class="high-score-item">
+                <span class="rank">${i + 1}</span>
+                <span class="name">${s.name}</span>
+                <span class="score">${s.score} נק'</span>
+                <span class="date">${new Date(s.date).toLocaleDateString('he-IL')}</span>
+            </div>
+        `).join('');
+    }
+    
+    modal.style.display = 'flex';
+}
+
+// Turn Timer Functions
+function startTurnTimer() {
+    if (!gameState.timerEnabled || gameState.turnTimeLimit <= 0) return;
+    
+    stopTurnTimer();
+    gameState.timeRemaining = gameState.turnTimeLimit;
+    updateTimerDisplay();
+    
+    gameState.turnTimerInterval = setInterval(() => {
+        gameState.timeRemaining--;
+        updateTimerDisplay();
+        
+        const timerDisplay = document.getElementById('timerDisplay');
+        if (gameState.timeRemaining <= 10 && timerDisplay) {
+            timerDisplay.classList.add('warning');
+        }
+        
+        if (gameState.timeRemaining <= 0) {
+            stopTurnTimer();
+            handleTimeExpired();
+        }
+    }, 1000);
+}
+
+function stopTurnTimer() {
+    if (gameState.turnTimerInterval) {
+        clearInterval(gameState.turnTimerInterval);
+        gameState.turnTimerInterval = null;
+    }
+    const timerDisplay = document.getElementById('timerDisplay');
+    if (timerDisplay) {
+        timerDisplay.classList.remove('warning');
+    }
+}
+
+function updateTimerDisplay() {
+    const timerDisplay = document.getElementById('timerDisplay');
+    if (!timerDisplay || !gameState.timerEnabled) return;
+    
+    const minutes = Math.floor(gameState.timeRemaining / 60);
+    const seconds = gameState.timeRemaining % 60;
+    timerDisplay.textContent = `⏱️ ${minutes}:${seconds.toString().padStart(2, '0')}`;
+    timerDisplay.style.display = 'inline-block';
+}
+
+function handleTimeExpired() {
+    showToast('הזמן נגמר! התור מדולג', 'error');
+    resetTurn();
+    nextPlayer();
+}
 
 // Word Challenges - expanded list
 const WORD_CHALLENGES = [
@@ -1715,6 +1816,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameMode = document.getElementById('gameMode');
     const localGameOptions = document.getElementById('localGameOptions');
     const onlineGameOptions = document.getElementById('onlineGameOptions');
+    const startGameBtn = document.getElementById('startGameBtn');
+    
+    // Make sure start button is visible for local games by default
+    if (startGameBtn && gameMode && gameMode.value === 'local') {
+        startGameBtn.style.display = 'block';
+    }
     
     if (gameMode) {
         gameMode.addEventListener('change', (e) => {
@@ -1733,7 +1840,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 if (localGameOptions) localGameOptions.style.display = 'block';
                 if (onlineGameOptions) onlineGameOptions.style.display = 'none';
-                if (startGameBtn) startGameBtn.style.display = 'block';
+                if (startGameBtn) startGameBtn.style.display = 'block'; // Show start button for local games
             }
         });
     }
@@ -1776,16 +1883,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // Local game start
     startGameBtn.addEventListener('click', () => {
         const mode = playerMode.value;
+        const difficulty = document.getElementById('difficultyMode').value;
         const names = [
             document.getElementById('player1Name').value || 'שחקן 1',
             document.getElementById('player2Name').value || 'שחקן 2'
         ];
+        
+        // Set difficulty settings
+        const difficultySettings = {
+            easy: { turnTime: 0, aiHints: true, rackSize: 7 },
+            normal: { turnTime: 0, aiHints: false, rackSize: 7 },
+            hard: { turnTime: 45, aiHints: false, rackSize: 7 }, // 45 seconds (less than 1 minute)
+            expert: { turnTime: 60, aiHints: false, rackSize: 6 }
+        };
+        
+        const settings = difficultySettings[difficulty];
+        gameState.turnTimeLimit = settings.turnTime;
+        gameState.timerEnabled = settings.turnTime > 0;
+        
+        // Show/hide hints button based on difficulty
+        const hintsBtn = document.getElementById('hintsBtn');
+        if (hintsBtn) {
+            hintsBtn.style.display = settings.aiHints ? 'inline-block' : 'none';
+        }
         
         startModal.style.display = 'none';
         document.getElementById('gameContainer').style.display = 'block';
         
         gameState.isOnline = false;
         initGame(mode, names);
+        
+        // Start turn timer if enabled
+        if (gameState.timerEnabled) {
+            startTurnTimer();
+        }
     });
     
     // Controls
