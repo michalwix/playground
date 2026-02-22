@@ -2,10 +2,11 @@
 name: pm-skill
 description: |
   Entry point for PM workflows. Routes to specialized skills based on need.
-  Use when PM wants help with: research, competitor analysis, or product deliverables.
+  Use when PM wants help with: research, competitor analysis, product deliverables, or ops.
 
   Triggers: any PM request, "help me", "I need to", "research", "competitor",
-  "user story", "estimate", "flows", "understand", "compare"
+  "user story", "estimate", "flows", "understand", "compare", "ops",
+  "investigate issue", "runbook", "escalation", "health check"
 ---
 
 # PM Skill - Router
@@ -44,6 +45,8 @@ Options:
     → Live online research on competitor pricing, features, flows
   - "Create deliverables"
     → User stories, estimations, flow verification
+  - "Ops work"
+    → Investigate issues, runbooks, health checks, escalations, automation
   - "Continue previous work"
     → Load and continue a saved session
 ```
@@ -59,6 +62,7 @@ Based on selection, announce and load:
 | Research our systems | "I'm using **premium-research** to help you understand our systems." → Load `premium-research/SKILL.md` |
 | Research competitors | "I'm using **competitor-research** to gather live data." → Load `competitor-research/SKILL.md` |
 | Create deliverables | "I'm using **product-hub** to create your deliverable." → Load `product-hub/SKILL.md` |
+| Ops work | "I'm using **ops** to help with operational work." → Load `ops/SKILL.md` |
 | Continue previous | Show sessions list → Load selected session context → Route to appropriate skill |
 
 ---
@@ -74,6 +78,7 @@ Options:
   - "Research more" → Route to premium-research
   - "Check competitors" → Route to competitor-research
   - "Create deliverables" → Route to product-hub
+  - "Ops work" → Route to ops
 ```
 
 ---
@@ -107,9 +112,13 @@ pm-skill (you are here)
     │   └── Live online research, pricing, features, SWOT
     │   └── ALWAYS fetches current data (no cache)
     │
-    └── product-hub/
-        └── User stories, estimations, flow verification
-        └── References: flow guidelines, templates
+    ├── product-hub/
+    │   └── User stories, estimations, flow verification
+    │   └── References: flow guidelines, templates
+    │
+    └── ops/
+        └── Investigate issues, runbooks, health checks, escalations
+        └── Tools: Premium Platform MCP, Trino, Jira
 ```
 
 ---
@@ -127,3 +136,7 @@ For experienced PMs, skip routing:
 | "Write stories for X" | product-hub → stories |
 | "Estimate X" | product-hub → estimation |
 | "New product X" | product-hub → flow verification |
+| "Investigate issue X" | ops → investigate |
+| "Create runbook for X" | ops → runbook |
+| "Ops health check" | ops → queries |
+| "User reported X" | ops → escalation |

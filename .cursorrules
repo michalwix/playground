@@ -11,6 +11,9 @@ When I ask about competitors, pricing, or competitive analysis:
 When I ask about creating user stories, estimates, or verifying flows:
 → Read and follow .cursor/pm-skill-cursor/product-hub/SKILL.md
 
+When I ask about ops, investigating issues, runbooks, escalations, health checks, or automation:
+→ Read and follow .cursor/pm-skill-cursor/ops/SKILL.md
+
 For help choosing which skill to use:
 → Read .cursor/pm-skill-cursor/SKILL.md
 
@@ -36,3 +39,8 @@ For help choosing which skill to use:
 ### Product Hub (deliverables)
 - "user story", "stories", "estimate", "effort"
 - "flows", "verify", "new product", "new feature", "spec"
+
+### Ops (operational work)
+- "ops", "investigate issue", "escalation", "runbook", "playbook"
+- "health check", "anomaly", "subscription issue", "feature issue"
+- "billing issue", "automate", "manual process", "ops report"
